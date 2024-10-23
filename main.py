@@ -81,6 +81,7 @@ def main():
     picked = ""
     playerWins = 0
     aiWins = 0
+    draws = 0
     playerMoves = []
     lastMove = None
     click = False
@@ -110,12 +111,14 @@ def main():
 
         if click:
             if picked in ["rock", "paper", "scissors"]:
+                computerChoice = predictMove(transitionMatrix, lastMove)
+
 
                 if lastMove is not None:
                     updateMarkoxChain(transitionMatrix, lastMove, picked)
                 lastMove = picked
 
-                computerChoice = predictMove(transitionMatrix, lastMove)
+                #computerChoice = predictMove(transitionMatrix, lastMove)
                 #print(transitionMatrix)
                 result = determineWinner(picked, computerChoice)
                 
@@ -123,6 +126,9 @@ def main():
                     playerWins+=1
                 elif result == "computer":
                     aiWins +=1
+                elif result == "Draw":
+                    draws += 1
+
                 click = False
 
                 print (computerChoice)
@@ -138,14 +144,22 @@ def main():
         rockButton.draw(screen)
         paperButton.draw(screen)
         scissorsButton.draw(screen)
-        text = "You have won: " + str(playerWins) + "    AI has won: " + str(aiWins)
+
+        winrate = 0
+        totalMoves = aiWins + playerWins
+        if totalMoves > 0:
+            winrate = round((aiWins/totalMoves) * 100, 2)
+        else:
+            winrate = 0
+        
+        text = "You have won: " + str(playerWins) + "    AI has won: " + str(aiWins) + "     Draws: " + str(draws) + "       AI winrate: " + str(winrate) + "%"
 
 
-        draw_text(screen, text, text_font, (0,0,0), 620,150)
+
+        draw_text(screen, text, text_font, (0,0,0), 320,150)
+        #draw_text(screen, text1, text_font, (0,0,0), 620, 100)
 
         
-        
-
     pygame.quit()
 
 
